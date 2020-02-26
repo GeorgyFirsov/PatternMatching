@@ -161,9 +161,9 @@ namespace detail {
         // 
         using _ExactArgs = utils::ArgsOf<_Callable>;
         using _MatchCondition = traits::disjunction<
-            traits::is_same_weak<_ExactArgs::Args,  _TiedArgs>,
-            traits::is_same_weak<_ExactArgs::LRefs, _TiedArgs>,
-            traits::is_same_weak<_ExactArgs::RRefs, _TiedArgs>
+            traits::is_same_tuple_weak<_ExactArgs::Args,  _TiedArgs>,
+            traits::is_same_tuple_weak<_ExactArgs::LRefs, _TiedArgs>,
+            traits::is_same_tuple_weak<_ExactArgs::RRefs, _TiedArgs>
         >;
 
         //

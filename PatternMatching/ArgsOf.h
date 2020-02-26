@@ -53,7 +53,17 @@ namespace {
         typename    _Ret  /* Return value of function */,
         typename... _Args /* Arguments' types */
     > struct ArgsOf<_Ret(*)(_Args...)>
-        : ArgsOfBase<_Ret, _Args> { };
+        : ArgsOfBase<_Ret, _Args...> { };
+
+    //
+    // Reference-to-unction specialization
+    // 
+
+    template<
+        typename    _Ret  /* Return value of function */,
+        typename... _Args /* Arguments' types */
+    > struct ArgsOf<_Ret(&)(_Args...)>
+        : ArgsOfBase<_Ret, _Args...> { };
 
     //
     // Template specializations for member functions

@@ -135,20 +135,42 @@ namespace {
             >::value && _IsSameTupleWeakHelper<_Tuple1, _Tuple2>( std::make_index_sequence<sizeof...( _Idxs )>{} );
     }
 
+    /************************************************************************************/
+
+    //
+    // Base type for 'is_same_tuple_weak' to inherit from.
+    // It has two specializations for the same and for
+    // different sizes of tuples.
+    // 
+
+    template<
+        typename _Tuple1 /* Type of the first tuple */,
+        typename _Tuple2 /* Type of the second one */,
+        size_t   _Size1  /* Size of the first tuple */,
+        size_t   _Size2  /* Size of the second one */
+    > struct is_same_tuple_weak_base
+        : std::false_type { };
+
+    template<
+        typename _Tuple1 /* Type of the first tuple */,
+        typename _Tuple2 /* Type of the second one */,
+        size_t   _Size   /* Size of tuples (specialization for same-sized tuples) */
+    > struct is_same_tuple_weak_base<_Tuple1, _Tuple2, _Size, _Size>
+        : std::bool_constant<
+            /* For tuples with the same size we can compare corresponding types inside */
+            _IsSameTupleWeakHelper<_Tuple1, _Tuple2>( std::make_index_sequence<std::tuple_size<_Tuple1>::value>{} )
+        > { };
+
 } // anonymous namespace
 
     template<
         typename _Tuple1 /* Type of the first tuple */,
         typename _Tuple2 /* Type of the second tuple */
-    > struct is_same_tuple_weak 
-        : traits::conjunction<
-            /* Tuples must have the same sizes */
-            std::bool_constant<
-                std::tuple_size<_Tuple1>::value == std::tuple_size<_Tuple2>::value
-            >,
-            std::bool_constant<
-                _IsSameTupleWeakHelper<_Tuple1, _Tuple2>( std::make_index_sequence<std::tuple_size<_Tuple1>::value>{} )
-            >
+    > struct is_same_tuple_weak
+        : is_same_tuple_weak_base<
+            _Tuple1, _Tuple2, 
+            std::tuple_size<_Tuple1>::value, 
+            std::tuple_size<_Tuple2>::value
         > { };
 
 } // namespace traits

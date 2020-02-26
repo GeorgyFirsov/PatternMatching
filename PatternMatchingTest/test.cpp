@@ -86,3 +86,19 @@ TEST(PatternMatching, MatchCompliletimeConditionMultiple)
 
     EXPECT_TRUE( result );
 }
+
+bool DoWorkInt( int )         { return false; }
+bool DoWorkDbl( double )      { return true; }
+bool DoWorkIntInt( int, int ) { return false; }
+
+TEST(PatternMatching, MatchFunctions)
+{
+    auto result = match::Match(
+        std::make_tuple( 3.14 ),
+        DoWorkInt,
+        DoWorkIntInt,
+        DoWorkDbl
+    );
+
+    EXPECT_TRUE( result );
+}

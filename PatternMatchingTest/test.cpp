@@ -48,3 +48,41 @@ TEST(PatternMatching, MatchRRefs)
 
     EXPECT_EQ( copy, std::string( "Non empty" ) );
 }
+
+TEST(PatternMatching, MatchValuesMultiple)
+{
+    auto result = match::Match(
+        std::make_tuple( 1, 3.14 ),
+        []( double )         { return 0; },
+        []( int, double )    { return 1; },
+        []( char, int, int ) { return 2; },
+        []( std::string& )   { return 3; },
+        DEFAULT_FUNCTOR      { return 4; }
+    );
+
+    EXPECT_EQ( result, 1 );
+}
+
+TEST(PatternMatching, MatchCompliletimeCondition)
+{
+    auto result = match::Match(
+        std::make_tuple( std::is_floating_point<float>{} ),
+        []( std::true_type )  { return true; },
+        []( std::false_type ) { return false; }
+        /* Note: here is not necessary to put default functor */
+    );
+
+    EXPECT_TRUE( result );
+}
+
+TEST(PatternMatching, MatchCompliletimeConditionMultiple)
+{
+    auto result = match::Match(
+        std::make_tuple( std::is_floating_point<float>{}, std::is_array<float>{} ),
+        []( std::false_type )                  { return false; },
+        []( std::true_type, std::false_type )  { return true; },
+        DEFAULT_FUNCTOR                        { return false; }
+    );
+
+    EXPECT_TRUE( result );
+}

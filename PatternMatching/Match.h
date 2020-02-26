@@ -67,7 +67,7 @@ namespace detail {
         // 
         static_assert(
             traits::is_invocable<_Callable, decltype( std::get<_Idxs>( tpl ) )... >::value,
-            "Callable shold be able to be invoked with passed arguments. "     \
+            "Callable should be able to be invoked with passed arguments. "     \
             "Maybe you forgot to add trailing generic lambda to 'Match' call " \
             "or it has incorrect number of parameters."
         );
@@ -161,9 +161,9 @@ namespace detail {
         // 
         using _ExactArgs = utils::ArgsOf<_Callable>;
         using _MatchCondition = traits::disjunction<
-            std::is_same<_ExactArgs::Args,  _TiedArgs>,
-            std::is_same<_ExactArgs::LRefs, _TiedArgs>,
-            std::is_same<_ExactArgs::RRefs, _TiedArgs>
+            traits::is_same_tuple_weak<_ExactArgs::Args,  _TiedArgs>,
+            traits::is_same_tuple_weak<_ExactArgs::LRefs, _TiedArgs>,
+            traits::is_same_tuple_weak<_ExactArgs::RRefs, _TiedArgs>
         >;
 
         //

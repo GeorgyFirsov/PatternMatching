@@ -232,6 +232,11 @@ namespace detail {
         );
     }
 
-#   define DEFAULT_FUNCTOR []( auto&&... )
+
+#   define DEFAULT_FUNCTOR_DEF []( auto&&... )
+#   define DEFAULT_THROW( _ExceptionT ) []( auto&&... ) { throw _ExceptionT(); }
+#   define DEFAULT_THROW_MSG( _ExceptionT, _Msg ) []( auto&&... ) { throw _ExceptionT( _Msg ); }
+#   define DEFAULT_RETURN_NULL []( auto&&... ) { return nullptr; }
+#   define DEFAULT_RETURN_VALUE( _Value ) []( auto&&... ) { return (_Value); } 
 
 } // namespace match

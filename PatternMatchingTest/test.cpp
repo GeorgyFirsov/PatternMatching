@@ -8,7 +8,7 @@ TEST(PatternMatching, MatchValues)
         []( int )          { return 1; },
         []( char )         { return 2; },
         []( std::string& ) { return 3; },
-        DEFAULT_FUNCTOR    { return 4; }
+        DEFAULT_RETURN_VALUE( 4 )
     );
 
     EXPECT_EQ( result, 1 );
@@ -40,7 +40,7 @@ TEST(PatternMatching, MatchRRefs)
     auto copy = match::Match(
         std::forward_as_tuple( str ),
         []( std::string& s ) { auto copy = std::move( s ); return copy; },
-        DEFAULT_FUNCTOR      { return std::string( "Error" ); }
+        DEFAULT_RETURN_VALUE( std::string( "Error" ) )
     );
 
     EXPECT_TRUE( str.empty() );
@@ -57,7 +57,7 @@ TEST(PatternMatching, MatchValuesMultiple)
         []( int, double )    { return 1; },
         []( char, int, int ) { return 2; },
         []( std::string& )   { return 3; },
-        DEFAULT_FUNCTOR      { return 4; }
+        DEFAULT_RETURN_VALUE( 4 )
     );
 
     EXPECT_EQ( result, 1 );
@@ -79,9 +79,9 @@ TEST(PatternMatching, MatchCompliletimeConditionMultiple)
 {
     auto result = match::Match(
         std::make_tuple( std::is_floating_point<float>{}, std::is_array<float>{} ),
-        []( std::false_type )                  { return false; },
-        []( std::true_type, std::false_type )  { return true; },
-        DEFAULT_FUNCTOR                        { return false; }
+        []( std::false_type )                 { return false; },
+        []( std::true_type, std::false_type ) { return true; },
+        DEFAULT_RETURN_VALUE( false )
     );
 
     EXPECT_TRUE( result );

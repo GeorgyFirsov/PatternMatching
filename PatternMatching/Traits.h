@@ -158,7 +158,7 @@ namespace {
     > struct is_same_tuple_weak_base<_Tuple1, _Tuple2, _Size, _Size>
         : std::bool_constant<
             /* For tuples with the same size we can compare corresponding types inside */
-            _IsSameTupleWeakHelper<_Tuple1, _Tuple2>( std::make_index_sequence<std::tuple_size<_Tuple1>::value>{} )
+            _IsSameTupleWeakHelper<_Tuple1, _Tuple2>( std::make_index_sequence<_Size>{} )
         > { };
 
 } // anonymous namespace

@@ -15,20 +15,13 @@ namespace {
     // 
 
     template<
-        typename    _Ret  /* Return type of functor*/,
-        typename... _Args /* Args types passed to functor */
+        typename /* _Ret */ /* Return type of functor*/,
+        typename... _Args   /* Args types passed to functor */
     > struct ArgsOfBase
     {
         using Args  = std::tuple<_Args...>;   // tuple with exact types of passed arguments
         using LRefs = std::tuple<_Args&...>;  // tuple with lvalue references to passed arguments
         using RRefs = std::tuple<_Args&&...>; // tuple with rvalue references to passed arguments
-
-        using Ret   = _Ret;
-        using ArgsCount = std::integral_constant<size_t, sizeof...( _Args )>;
-
-        constexpr size_t GetArgsCount() const noexcept {
-            return ArgsCount::value;
-        }
     };
 
 } // anonymous namespace
@@ -56,7 +49,7 @@ namespace {
         : ArgsOfBase<_Ret, _Args...> { };
 
     //
-    // Reference-to-unction specialization
+    // Reference-to-function specialization
     // 
 
     template<
@@ -69,27 +62,26 @@ namespace {
     // Template specializations for member functions
     // 
 
-#define __PLACEHOLDER
-
-#define __ARGS_OF_MEMFN( CONST_OPT, VOLATILE_OPT, REF_OPT )                 \
+#define PLACEHOLDER
+#define ARGS_OF_MEMFN( CONST_OPT, VOLATILE_OPT, REF_OPT )                   \
     template<typename _Ret, typename _Class, typename... _Args>             \
     struct ArgsOf<_Ret(_Class::*)(_Args...) CONST_OPT VOLATILE_OPT REF_OPT> \
         : ArgsOfBase<_Ret, _Args...> { }
 
-    __ARGS_OF_MEMFN( __PLACEHOLDER, __PLACEHOLDER, __PLACEHOLDER );
-    __ARGS_OF_MEMFN( __PLACEHOLDER, __PLACEHOLDER, &             );
-    __ARGS_OF_MEMFN( __PLACEHOLDER, __PLACEHOLDER, &&            );
-    __ARGS_OF_MEMFN( const,         __PLACEHOLDER, __PLACEHOLDER );
-    __ARGS_OF_MEMFN( const,         __PLACEHOLDER, &             );
-    __ARGS_OF_MEMFN( const,         __PLACEHOLDER, &&            );
-    __ARGS_OF_MEMFN( __PLACEHOLDER, volatile,      __PLACEHOLDER );
-    __ARGS_OF_MEMFN( __PLACEHOLDER, volatile,      &             );
-    __ARGS_OF_MEMFN( __PLACEHOLDER, volatile,      &&            );
-    __ARGS_OF_MEMFN( const,         volatile,      __PLACEHOLDER );
-    __ARGS_OF_MEMFN( const,         volatile,      &             );
-    __ARGS_OF_MEMFN( const,         volatile,      &&            );
+    ARGS_OF_MEMFN( PLACEHOLDER, PLACEHOLDER, PLACEHOLDER );
+    ARGS_OF_MEMFN( PLACEHOLDER, PLACEHOLDER, &           );
+    ARGS_OF_MEMFN( PLACEHOLDER, PLACEHOLDER, &&          );
+    ARGS_OF_MEMFN( const,       PLACEHOLDER, PLACEHOLDER );
+    ARGS_OF_MEMFN( const,       PLACEHOLDER, &           );
+    ARGS_OF_MEMFN( const,       PLACEHOLDER, &&          );
+    ARGS_OF_MEMFN( PLACEHOLDER, volatile,    PLACEHOLDER );
+    ARGS_OF_MEMFN( PLACEHOLDER, volatile,    &           );
+    ARGS_OF_MEMFN( PLACEHOLDER, volatile,    &&          );
+    ARGS_OF_MEMFN( const,       volatile,    PLACEHOLDER );
+    ARGS_OF_MEMFN( const,       volatile,    &           );
+    ARGS_OF_MEMFN( const,       volatile,    &&          );
 
-#undef __PLACEHOLDER
-#undef __ARGS_OF_MEMFN
+#undef PLACEHOLDER
+#undef ARGS_OF_MEMFN
 
 } // namespace utils

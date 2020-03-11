@@ -76,7 +76,7 @@ namespace detail {
         // Here we just invoke our function with untied
         // and forwarded arguments.
         //         
-        return callable( 
+        return std::forward<_Callable>( callable )( 
             std::get<_Idxs>( std::forward<_TiedArgs>( tpl ) )... 
         );
     }
